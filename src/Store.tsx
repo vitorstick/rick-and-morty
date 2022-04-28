@@ -1,23 +1,5 @@
 import React from 'react';
-
-export interface IEpisode {
-  id: number;
-  name: string;
-  season: number;
-  number: number;
-  airdate: string;
-  image: { medium: string; original: string };
-  summary: string;
-}
-interface IState {
-  episodes: IEpisode[];
-  favourites: IEpisode[];
-}
-
-interface IAction {
-  type: string;
-  payload: any;
-}
+import { IAction, IEpisode, IState } from './interfaces';
 
 const initialState: IState = {
   episodes: [],
@@ -32,7 +14,13 @@ function reducer(state: IState, action: IAction): IState {
       return { ...state, episodes: action.payload };
     case 'ADD_FAV':
       return { ...state, favourites: [...state.favourites, action.payload] };
-
+    case 'REMOVE_FAV':
+      return {
+        ...state,
+        favourites: state.favourites.filter(
+          (fav: IEpisode) => fav.id !== action.payload.id
+        ),
+      };
     default:
       return state;
   }
