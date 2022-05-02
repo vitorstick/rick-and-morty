@@ -1,51 +1,12 @@
 import React from 'react';
+import { Link, Route, Routes } from 'react-router-dom';
 import { Store } from './Store';
 import './App.css';
-import { IEpisode, IAction } from './interfaces';
-
-const EpisodesList = React.lazy<any>(() => import('./EpisodesList'));
+import HomePage from './HomePage';
+import FavPage from './FavPage';
 
 function App() {
-  const { state, dispatch } = React.useContext(Store);
-
-  React.useEffect(() => {
-    state.episodes.length === 0 && fetchDataAction();
-  }, []);
-
-  const URL =
-    'https://api.tvmaze.com/singlesearch/shows?q=rick-&-morty&embed=episodes';
-
-  const fetchDataAction = async () => {
-    const data = await fetch(URL);
-    const dataJSON = await data.json();
-    return dispatch({
-      type: 'FETCH_DATA',
-      payload: dataJSON._embedded.episodes,
-    });
-  };
-
-  const toggleFavAction = (episode: IEpisode): IAction => {
-    const episodeInFav = state.favourites.find(
-      (fav: IEpisode) => fav.id === episode.id
-    );
-
-    if (episodeInFav) {
-      return dispatch({
-        type: 'REMOVE_FAV',
-        payload: episodeInFav,
-      });
-    }
-    return dispatch({
-      type: 'ADD_FAV',
-      payload: episode,
-    });
-  };
-
-  const props: any = {
-    episodes: state.episodes,
-    toggleFavAction,
-    favourites: state.favourites,
-  };
+  const { state } = React.useContext(Store);
 
   console.log(state);
   return (
@@ -59,11 +20,16 @@ function App() {
           )}
         </p>
       </header>
-      <React.Suspense fallback={<div>Loading...</div>}>
-        <section className='episode-layout'>
-          <EpisodesList {...props} />
-        </section>
-      </React.Suspense>
+      <nav className='header'>
+        <Link to='/'>HomePage</Link>
+        <Link to='/favorites'>Favorites</Link>
+      </nav>
+      <main className='main'>
+        <Routes>
+          <Route path='/' element={<HomePage />} />
+          <Route path='/favorites' element={<FavPage />} />
+        </Routes>
+      </main>
     </React.Fragment>
   );
 }

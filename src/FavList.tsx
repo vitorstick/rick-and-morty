@@ -1,10 +1,10 @@
 import React from 'react';
 import { IEpisode, IEpisodeProps } from './interfaces';
 
-export default function EpisodesList(props: IEpisodeProps): JSX.Element[] {
-  const { episodes, toggleFavAction, favourites, state } = props;
+export default function FavList(props: IEpisodeProps): JSX.Element[] {
+  const { toggleFavAction, favourites, state } = props;
 
-  return episodes.map((episode: IEpisode) => {
+  return favourites.map((episode: IEpisode) => {
     return (
       <section key={episode.id} className='episode-box'>
         <img
